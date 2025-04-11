@@ -1,0 +1,90 @@
+from flask import Blueprint, request, jsonify
+from app.game_logic import GameLogic
+from .models import User, Game
+from . import db
+
+routes = Blueprint('routes', __name__)
+games = {}  # game_id'ye göre oyunları saklamak için bir sözlük
+
+@routes.route('/start_game', methods=['POST'])
+def start_game():
+    data = request.get_json()
+    player_symbol = data.get('player_symbol')
+    username = data.get('username')
+    
+    if not username:
+        return jsonify({"error": "Username is required."}), 400
+    
+    if player_symbol not in ["X", "O"]:
+        return jsonify({"error": "Invalid player symbol. Choose 'X' or 'O'."}), 400
+    
+    existing_user = User.query.filter_by(username=username).first()
+    
+    if not existing_user:
+        new_user = User(username=username)  # User ID otomatik oluşturulur
+        db.session.add(new_user)
+        db.session.commit()
+        user_id = new_user.id
+    else:
+        user_id = existing_user.id
+   
+
+
+    new_game = Game(user_id=user_id)  # game_id otomatik olarak artacak, result_id ise 3 olacak
+    new_game.result_id = 3
+    db.session.add(new_game)
+    db.session.commit()
+    game_id = new_game.game_id
+    games[game_id] = GameLogic(player_symbol)
+    
+    response = {
+        "game_id": game_id,
+        "user_id": user_id,
+        "result_id" : new_game.result_id,
+        "player_symbol": player_symbol,
+        "computer_symbol": games[game_id].computer
+    }
+
+    
+    # Eğer kullanıcı 'O' seçtiyse, bilgisayar otomatik olarak ilk hamlesini yapmalı
+    if player_symbol == "O":
+        computer_move = games[game_id].best_move()
+        games[game_id].make_move(computer_move, games[game_id].computer)
+        response["computer_move"] = computer_move
+    
+    return jsonify(response)
+
+@routes.route('/make_move', methods=['POST'])
+def make_move():
+    data = request.get_json()
+    game_id = data.get('game_id')
+    move = data.get('move')
+    
+    if game_id not in games:
+        return jsonify({"error": "Invalid game ID."}), 400
+    
+    game = games[game_id]
+    
+    if move not in game.get_available_moves():
+        return jsonify({"error": "Invalid move."}), 400
+    
+    game.make_move(move, game.player)
+    
+    # Kazanma durumu kontrolü
+    if game.winning(game.player):
+        return jsonify({"status": "Player wins!", "board": game.board})
+    elif game.is_draw():
+        return jsonify({"status": "It's a draw!", "board": game.board})
+    
+    # Bilgisayar hamlesini yapıyor
+    computer_move = game.best_move()
+    if computer_move:
+        game.make_move(computer_move, game.computer)
+    
+    # Kazanma durumu kontrolü (Bilgisayar için)
+    if game.winning(game.computer):
+        return jsonify({"status": "Computer wins!", "board": game.board})
+    elif game.is_draw():
+        return jsonify({"status": "It's a draw!", "board": game.board})
+    
+    return jsonify({"status": "Next move", "player_move": move, "computer_move": computer_move, "board": game.board})

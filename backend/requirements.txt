@@ -1,0 +1,7 @@
+psycopg2
+Flask
+SQLAlchemy
+python-dotenv
+flask-migrate
+#pip install -r requirements.txt 
+#pip freeze
