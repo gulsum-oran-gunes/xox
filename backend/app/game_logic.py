@@ -72,3 +72,5 @@ class GameLogic:
     def get_board(self):
         # Tahtayı JSON formatında döndürüyoruz.
         return self.board  # board'ı JSON formatına dönüştürüyoruz.
+
+
