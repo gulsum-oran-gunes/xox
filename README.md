@@ -10,8 +10,13 @@ calculated, not random.
 - React UI with animated X/O drawing and game status
 
 ## Screenshots
+**Start Game**
 ![Start Game](screenshots/startgame.png)
+
+**Computer Wins**
 ![Computer Wins](screenshots/computerwin.png)
+
+**Draw**
 ![Draw](screenshots/draw.png)
 
 ## Tech Stack
