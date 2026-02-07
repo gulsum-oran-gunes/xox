@@ -1,6 +1,6 @@
 import math
+from flask import jsonify
 import json
-
 class GameLogic:
     def __init__(self, player_symbol, board):
         # Tahtayı JSON formatında saklayacağız.
@@ -13,6 +13,11 @@ class GameLogic:
         return [k for k, v in self.board.items() if v == " "]
 
     def make_move(self, move, player):
+        move = int(move)
+        # Debug (uncomment if needed)
+        # print(f"Gelen move degeri: {move} - Tipi: {type(move)}")
+        # print(f"Mevcut board durumu: {self.board} - Tipi: {type(self.board)}")
+        # print(f"Board JSON formati: {json.dumps(self.board, indent=4)}")
         if self.board[move] == " ":
             self.board[move] = player
             return True

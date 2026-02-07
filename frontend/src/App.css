@@ -1,0 +1,287 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  padding: 12px 16px 32px;
+}
+
+.header {
+  text-align: center;
+  align-self: center;
+  color: #0b1a2a;
+}
+.info-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 420px;
+  gap: 18px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0b1a2a;
+}
+.board-row {
+  display: grid;
+  grid-template-columns: 200px 420px 200px;
+  align-items: center;
+  column-gap: 18px;
+}
+
+.side-info {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0b1a2a;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 10px 18px rgba(11, 26, 42, 0.12);
+  min-height: 96px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+
+.info-label {
+  opacity: 0.75;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.info-value {
+  font-weight: 900;
+  font-size: 18px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: #f3c94f;
+  box-shadow: 0 4px 10px rgba(11, 26, 42, 0.15);
+  display: block;
+  width: 100%;
+}
+
+.info-value-inline {
+  display: inline-block;
+  width: auto;
+  vertical-align: middle;
+}
+
+.title {
+  margin: 0;
+  font-size: 64px;
+  font-weight: 900;
+  letter-spacing: 5px;
+  font-style: italic;
+  color: #ffd54a;
+  text-transform: uppercase;
+  text-shadow:
+    -4px -4px 0 #0b1a2a,
+    4px -4px 0 #0b1a2a,
+    -4px 4px 0 #0b1a2a,
+    4px 4px 0 #0b1a2a,
+    0 10px 0 rgba(0, 0, 0, 0.2);
+}
+
+.title-accent {
+  color: #ffffff;
+}
+
+.title-main {
+  color: #ffd54a;
+}
+
+.board {
+  width: 420px;
+  height: 420px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: #5aa8ff;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 14px 30px rgba(7, 21, 36, 0.2);
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.cell:not(:nth-child(3n)) {
+  border-right: 6px solid #0e1c2f;
+}
+
+.cell:nth-child(-n + 6) {
+  border-bottom: 6px solid #0e1c2f;
+}
+
+.cell:disabled {
+  cursor: default;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.input {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 2px solid #0e1c2f;
+  font-size: 14px;
+  min-width: 180px;
+}
+
+.symbol-select {
+  display: flex;
+  gap: 8px;
+}
+
+.pill {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 2px solid #0e1c2f;
+  background: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pill.active {
+  background: #0e1c2f;
+  color: #ffffff;
+}
+
+.primary-button {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  background: #ffd54a;
+  color: #0b1a2a;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.primary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.restart-button {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+  padding: 18px 30px;
+  font-size: 18px;
+  border-radius: 14px;
+}
+
+.status {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+
+.symbol {
+  width: 70%;
+  height: 70%;
+  position: relative;
+  display: inline-block;
+  transform: scale(0.2);
+  opacity: 0;
+  transition: transform 600ms ease, opacity 600ms ease;
+}
+
+.symbol.x::before,
+.symbol.x::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 12px;
+  background: #f5f8ff;
+  border-radius: 999px;
+  transform-origin: center;
+  transition: transform 650ms ease;
+}
+
+.symbol.x::before {
+  transform: translate(-50%, -50%) rotate(45deg) scaleX(0);
+}
+
+.symbol.x::after {
+  transform: translate(-50%, -50%) rotate(-45deg) scaleX(0);
+}
+
+.symbol.o {
+  border: 12px solid #f3c94f;
+  border-radius: 50%;
+  box-sizing: border-box;
+  transform: scale(0.2);
+  transition: transform 650ms ease;
+}
+
+.cell.filled .symbol {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.cell.filled .symbol.x::before,
+.cell.filled .symbol.x::after {
+  transform: translate(-50%, -50%) rotate(var(--angle)) scaleX(1);
+}
+
+.symbol.x::before {
+  --angle: 45deg;
+}
+
+.symbol.x::after {
+  --angle: -45deg;
+}
+
+.cell.filled .symbol.o {
+  transform: scale(1);
+  opacity: 1;
+}
+
+@media (max-width: 480px) {
+  .board-row {
+    grid-template-columns: 1fr;
+    row-gap: 10px;
+    justify-items: center;
+  }
+
+  .side-info.left,
+  .side-info.right {
+    text-align: center;
+  }
+
+  .info-bar {
+    width: 100%;
+  }
+
+  .board {
+    width: 320px;
+    height: 320px;
+    padding: 14px;
+  }
+
+  .symbol.x::before,
+  .symbol.x::after {
+    height: 10px;
+  }
+
+  .symbol.o {
+    border-width: 10px;
+  }
+}

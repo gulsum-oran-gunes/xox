@@ -66,7 +66,7 @@ def start_game():
 def make_move():
     data = request.get_json()
     game_id = data.get('game_id')
-    move = data.get('move')
+    move = str(data.get('move'))
     
     # Oyun verisini veritabanından çek
     game = Game.query.filter_by(game_id=game_id).first()
@@ -78,6 +78,9 @@ def make_move():
 
     # GameLogic sınıfını kullanarak hamleyi yap
     game_logic = GameLogic(player_symbol, game.board)  # board'ı veritabanından alıyoruz
+    if move not in game.board:  # Eğer hamle board içinde değilse hata döndür
+        return jsonify({"error": "Invalid move."}), 400
+    
     if game_logic.make_move(move, player_symbol):  # Hamleyi tahtaya uygula
         # Hamleyi veritabanına kaydet
         game.board = game_logic.get_board()  # Güncellenmiş tahta
